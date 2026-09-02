@@ -91,3 +91,15 @@ CREATE TABLE Enrollment
     CONSTRAINT CK_Enrollment_Date
         CHECK (enrollment_Date <= GETDATE())
 );
+
+ALTER TABLE Teachers 
+ADD CONSTRAINT uq_teacher_dept	
+UNIQUE (dept_ID,tech_ID)
+
+ALTER TABLE Departments
+DROP CONSTRAINT FK_Department_LeadTeacher
+
+ALTER TABLE Departments 
+ADD CONSTRAINT FK_Department_LeadTeacher
+FOREIGN KEY (dept_ID,leadTeacherID)
+REFERENCES Teachers(dept_ID,tech_ID)
