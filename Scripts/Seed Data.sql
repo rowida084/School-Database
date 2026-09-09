@@ -67,7 +67,7 @@ INSERT INTO Enrollment
 VALUES
 (3,3,0),
 (3, 4, 90),
-(3, 5, 78),
+(3, 5, null),
 (4, 3, 92),
 (4, 4, null),
 (4, 5, 50),
