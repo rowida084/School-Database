@@ -70,7 +70,7 @@ CREATE TABLE Enrollment
 (
 Student_ID	INT NOT NULL,
 Course_ID INT NOT NULL,
-Grade	INT NOT NULL DEFAULT 0,
+Grade	INT ,
 Enrollment_Date  DATETIME  NOT NULL DEFAULT GETDATE(),
 
 CONSTRAINT PK_Enrollment 
