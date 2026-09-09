@@ -66,30 +66,29 @@ CREATE TABLE Courses
         ON DELETE CASCADE 
 );
 
-
-CREATE TABLE Enrollment
+CREATE TABLE Enrollment 
 (
-    enrollment_ID INT PRIMARY KEY IDENTITY,
-    grade INT NULL,
-    enrollment_Date DATETIME,
+Student_ID	INT NOT NULL,
+Course_ID INT NOT NULL,
+Grade	INT NOT NULL DEFAULT 0,
+Enrollment_Date  DATETIME  NOT NULL DEFAULT GETDATE(),
 
-    student_ID INT NOT NULL,
-    course_ID INT NOT NULL,
+CONSTRAINT PK_Enrollment 
+PRIMARY KEY(Student_ID,Course_ID),
 
-    CONSTRAINT FK_Enrollment_Student
-        FOREIGN KEY (student_ID)
-        REFERENCES Students(stud_ID),
+CONSTRAINT FK_Enrollment_Student
+FOREIGN KEY(Student_ID)
+REFERENCES Students(stud_ID),
 
-    CONSTRAINT FK_Enrollment_Course
-        FOREIGN KEY (course_ID)
-        REFERENCES Courses(course_ID)
-        ON DELETE CASCADE,
+CONSTRAINT FK_Enrollment_Course
+FOREIGN KEY (Course_ID)
+REFERENCES Courses(course_ID),
 
-    CONSTRAINT CK_Grade
-        CHECK (grade >= 0 AND grade <= 100),
+  CONSTRAINT CK_Grade
+        CHECK (Grade >= 0 AND Grade <= 100),
 
     CONSTRAINT CK_Enrollment_Date
-        CHECK (enrollment_Date <= GETDATE())
+        CHECK (Enrollment_Date <= GETDATE())
 );
 
 ALTER TABLE Teachers 
