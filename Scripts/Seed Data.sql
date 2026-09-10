@@ -9,7 +9,7 @@ INSERT INTO Departments (dept_Name, leadTeacherID)
 VALUES
 ('Computer Science', 1),
 ('Mathematics', 4),
-('Physics', 7);
+('Physics', 7)
 
 
 
@@ -25,7 +25,11 @@ VALUES
 
 ('Mahmoud Samir', 3, NULL),
 ('Hana Mostafa', 3, 7),
-('Karim Tarek', 3, 7);
+('Karim Tarek', 3, 7)
+
+('Hassan Ahmed', 1, 1),
+('Mai Mohamed', 2, 4),
+('Khaled Samir', 3, 7)
 
 
 
@@ -45,7 +49,7 @@ VALUES
 
 ('Karim Mohamed', 3),
 ('Hala Tarek', 3),
-('Adam Mahmoud', 3);
+('Adam Mahmoud', 3)
 
 
 INSERT INTO Courses
@@ -59,8 +63,21 @@ VALUES
 ('Linear Algebra', 'MATH302', 5, 2),
 
 ('Classical Mechanics', 'PHY301', 7, 3),
-('Electromagnetism', 'PHY302', 8, 3);
-  
+('Electromagnetism', 'PHY302', 8, 3)
+    
+('Operating Systems', 'CS304', 10, 1),
+('Computer Networks', 'CS305', 10, 1),
+('Web Development', 'CS306', 10, 1),
+('Software Engineering', 'CS307', 10, 1),
+
+('Statistics', 'MATH303', 11, 2),
+('Differential Equations', 'MATH304', 11, 2),
+('Probability', 'MATH305', 11, 2),
+('Number Theory', 'MATH306', 11, 2),
+('Mathematical Logic', 'MATH307', 11, 2),
+
+('Thermodynamics', 'PHY303', 12, 3),
+('Optics', 'PHY304', 12, 3)
 
 INSERT INTO Enrollment
     (student_ID, course_ID, grade)
@@ -85,7 +102,7 @@ VALUES
 (10, 8, 77),
 (10, 9, 84),
 (11, 8, 67),
-(11, 9, null);
+(11, 9, null)
 
 
 INSERT INTO Enrollment
@@ -93,5 +110,5 @@ INSERT INTO Enrollment
 VALUES
 (8, 4, 34, '2025-10-10'),
 (9, 3, null, '2025-10-12'),
-(10, 5, 87, '2025-10-20');
+(10, 5, 87, '2025-10-20')
 
