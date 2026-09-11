@@ -53,7 +53,7 @@ VALUES
 ('Asmaa Ali', 3),
 ('Mai Hany',1)
 
-INSERT INTO Courses
+INSERT INTO Courses  --cources IDs from 3 to 20 
     (course_Name, course_Code, teacher_ID, department_ID)
 VALUES
 ('Database Systems', 'CS301', 1, 1),
