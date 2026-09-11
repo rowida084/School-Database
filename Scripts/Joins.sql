@@ -10,3 +10,16 @@ from Teachers inner join Courses
 on tech_ID=teacher_ID
 group by tech_Name 
 having count(course_Name)>3
+
+
+--Get every Student who has not received a Grade in any enrolled Course without using NOT IN.
+select distinct stud_Name
+from Students inner join  Enrollment
+on Enrollment.Student_ID=Students.stud_ID
+where not  exists 
+(
+select 1
+from Enrollment 
+where Enrollment.Student_ID=Students.stud_ID
+and Grade is not null
+)
