@@ -42,7 +42,8 @@ VALUES
 ('Ali Mostafa', 1),
 ('Mariam Ahmed', 1),
 ('Omar Hassan', 1),
-
+('Mai Hany',1)
+    
 ('Yasmin Khaled', 2),
 ('Ahmed Samir', 2),
 ('Salma Adel', 2),
@@ -51,7 +52,9 @@ VALUES
 ('Hala Tarek', 3),
 ('Adam Mahmoud', 3)
 ('Asmaa Ali', 3),
-('Mai Hany',1)
+('Belal Ahmed', 3),
+('Mariam Maged',3)
+
 
 INSERT INTO Courses  --cources IDs from 3 to 20 
     (course_Name, course_Code, teacher_ID, department_ID)
@@ -104,7 +107,13 @@ VALUES
 (10, 9, 84),
 (11, 8, 67),
 (11, 9, null)
-
+(13,3,Null),
+(13, 4, Null),
+(13, 5, Null),
+(12, 4, Null),
+(12, 5, Null),
+(12, 6, Null),
+(12, 7, Null)
 
 INSERT INTO Enrollment
     (student_ID, course_ID, grade, enrollment_Date)
