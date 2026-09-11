@@ -23,3 +23,14 @@ from Enrollment
 where Enrollment.Student_ID=Students.stud_ID
 and Grade is not null
 )
+
+
+--Get every Department whose Lead Teacher supervises more than 5 Teachers using a Self JOIN and aggregation.  The result is "Computer Sceince"
+select dept_Name
+from Departments D inner join Teachers leadTeacher
+on D.dept_ID = leadTeacher.dept_ID
+inner join Teachers supervisedTeacher
+on leadTeacher.tech_ID=supervisedTeacher.supervise_ID
+group by dept_Name 
+having count(supervisedTeacher.tech_ID)>5
+
