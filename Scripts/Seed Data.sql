@@ -50,7 +50,8 @@ VALUES
 ('Karim Mohamed', 3),
 ('Hala Tarek', 3),
 ('Adam Mahmoud', 3)
-
+('Asmaa Ali', 3),
+('Mai Hany',1)
 
 INSERT INTO Courses
     (course_Name, course_Code, teacher_ID, department_ID)
