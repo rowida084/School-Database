@@ -35,7 +35,7 @@ VALUES
     
 ('Mahmoud Samir', 3, NULL),
 ('Hana Mostafa', 3, 7),
-('Karim Tarek', 3, 7)
+('Karim Tarek', 3, 7),
 ('Khaled Samir', 3, 7)
 
 
