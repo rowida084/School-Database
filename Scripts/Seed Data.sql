@@ -18,17 +18,24 @@ VALUES
 ('Ahmed Hassan', 1, NULL),
 ('Mona Ali', 1, 1),
 ('Omar Khaled', 1, 1),
-
+('Hassan Ahmed', 1, 1),
+('Ali Khaled', 1, 1),
+('Khaled Omer', 1, 1),   
+('Hany Omer', 1, 1),
+('Khaled Saber', 1, 1),
+('Hassan Ahmed', 1, 1),
+    
 ('Sara Mohamed', 2, NULL),
 ('Youssef Adel', 2, 4),
 ('Nour Ahmed', 2, 4),
-
+('Omer Ali', 2, 2),
+('Omer Ahmed', 2, 2),
+('Mai Ali', 2, 2),
+('Mai Mohamed', 2, 4),
+    
 ('Mahmoud Samir', 3, NULL),
 ('Hana Mostafa', 3, 7),
 ('Karim Tarek', 3, 7)
-
-('Hassan Ahmed', 1, 1),
-('Mai Mohamed', 2, 4),
 ('Khaled Samir', 3, 7)
 
 
