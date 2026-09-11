@@ -34,3 +34,11 @@ on leadTeacher.tech_ID=supervisedTeacher.supervise_ID
 group by dept_Name 
 having count(supervisedTeacher.tech_ID)>5
 
+
+--Get every Department and the number of Courses offered by each Department, but only show Departments that offer more than 5 Courses.
+select dept_Name 
+from Departments inner join Courses
+on dept_ID=department_ID
+group by dept_Name 
+having count(course_ID)>5
+
