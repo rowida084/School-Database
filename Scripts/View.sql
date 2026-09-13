@@ -11,3 +11,14 @@ on t.dept_ID=d.dept_ID
 group by d.dept_ID,d.dept_Name
 
 select * from vw_DepartmentSummary
+
+
+--Create vw_TeacherCourseLoad showing each Teacher and the number of Courses they teach.
+create view vw_TeacherCourseLoad
+as select tech_ID,tech_Name , count(course_ID) as CourseCount
+from Teachers  t left join Courses c
+on t.tech_ID=c.teacher_ID
+group by tech_ID,tech_Name
+
+select * from vw_TeacherCourseLoad
+
