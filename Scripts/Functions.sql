@@ -10,3 +10,21 @@ end
 
 select dbo.fn_CalculateAge('2000-05-10') as Age
 select dbo.fn_CalculateAge('2006-09-9') as Age
+
+
+
+--Create fn_GetCoursesByStudent(@StudentId INT) as a Table-Valued Function.
+
+create function fn_GetCoursesByStudent(@StudentID int)
+returns table 
+as 
+return 
+(
+select * 
+from vw_StudentFullReport
+where stud_ID=@StudentID
+)
+
+select * from fn_GetCoursesByStudent(1)
+select course_Name from fn_GetCoursesByStudent(5)
+
