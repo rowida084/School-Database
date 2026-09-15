@@ -53,6 +53,24 @@ select * from fn_GetStudentsByCourse(3,2)
 select * from fn_GetStudentsByCourse(8,3)
 
 
+--Create fn_IsPassed(@Grade DECIMAL) as a Scalar Function.
+create function fn_IsPassed (@Grade decimal)
+returns varchar(10)
+as
+begin 
+declare @Status varchar(10)
+declare @MyGrade int 
+set @MyGrade = cast(@Grade as int)
+ set @Status  = case
+when (@MyGrade is null) then 'Panding'
+when (@MyGrade >= 50) then 'Passed'
+else 'Failed'
+end 
+return @Status
+end 
 
+select dbo.fn_IsPassed(80.08)
+select dbo.fn_IsPassed(50.4)
+select dbo.fn_IsPassed(40.00)
 
 
