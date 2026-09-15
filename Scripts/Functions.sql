@@ -1,3 +1,4 @@
+--Create fn_CalculateAge(@DateOfBirth DATE) as a Scalar Function.
 create function fn_CalculateAge (@DateOfBirth date)
 returns int 
 as
