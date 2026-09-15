@@ -38,3 +38,32 @@ inner join Courses c
 on c.course_ID = e.Course_ID
 
 select * from vw_StudentFullReport
+
+
+--Create vw_DepartmentTopStudent using RANK() or ROW_NUMBER() to identify the top Student by average Grade.
+create view vw_departmentTopStudent 
+as
+SELECT *
+FROM
+(
+    SELECT *,
+           ROW_NUMBER() OVER
+           (
+               PARTITION BY dept_Name
+               ORDER BY average DESC
+           ) AS RN
+    FROM
+    (
+        SELECT 
+            s.stud_Name,
+            d.dept_Name,
+            AVG(Grade) AS average
+        FROM Students s
+        INNER JOIN Departments d
+            ON s.dept_ID = d.dept_ID
+        INNER JOIN Enrollment e
+            ON s.stud_ID = e.Student_ID
+        GROUP BY dept_Name, s.stud_Name
+    ) AS AverageStudents
+) AS RankedStudents
+WHERE RN = 1;
