@@ -28,3 +28,31 @@ where stud_ID=@StudentID
 select * from fn_GetCoursesByStudent(1)
 select course_Name from fn_GetCoursesByStudent(5)
 
+
+
+--Create fn_GetTopStudentsByCourse(@CourseId INT, @TopN INT) using a Window Function.
+create function fn_GetStudentsByCourse(@CourseID int,@TopN int)
+returns table 
+as 
+return 
+(
+
+select * 
+from 
+( select *, ROW_NUMBER() over (order by Grade desc) as RN
+from (
+select * 
+from vw_StudentFullReport
+where course_ID=@CourseID 
+) as StudentByCourse
+) as topStudents
+where RN<= @TopN)
+
+
+select * from fn_GetStudentsByCourse(3,2)
+select * from fn_GetStudentsByCourse(8,3)
+
+
+
+
+
