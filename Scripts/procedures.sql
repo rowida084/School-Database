@@ -1,7 +1,7 @@
 
 --Create sp_GetStudentsByDepartment(@DepartmentId).
 
-create proc sp_GetStudentByDepartment @DepartmentID int 
+create proc sp_GetStudentsByDepartment @DepartmentID int 
 as 
 begin try 
 if exists(select 1 from Departments where dept_ID =@DepartmentID)
