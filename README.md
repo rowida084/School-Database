@@ -1,134 +1,210 @@
-School  Database
+# School Database Management System
 
-A SQL Server database project designed to manage an academic environment, including departments, teachers, students, courses, enrollments, and grades.
+A relational **School Database Management System** built using **Microsoft SQL Server**.
 
-The project focuses on practicing relational database design and advanced SQL concepts such as constraints, joins, aggregation, views, functions, stored procedures, indexing, and query performance analysis.
-
----
-
-📌 Project Overview
-
-The database models the relationships between academic departments, teachers, students, and courses.
-
-It supports operations such as:
-
-- Managing departments and their lead teachers
-- Managing teachers and supervisor relationships
-- Managing students and their departments
-- Managing courses and assigned teachers
-- Enrolling students in courses
-- Recording and validating grades
-- Generating academic reports
-- Retrieving top-performing students
-- Transferring students between departments
-- Analyzing query performance and indexing
+The project demonstrates database design, relationships, constraints, data manipulation, views, functions, stored procedures, joins, subqueries, window functions, and indexing.
 
 ---
 
-🗂️ Database Structure
+## 📌 Project Overview
+
+This project models a school system containing:
+
+* Departments
+* Teachers
+* Students
+* Courses
+* Enrollments
+
+The database is designed to represent the relationships between these entities while enforcing data integrity through **Primary Keys, Foreign Keys, Unique Constraints, Check Constraints, and Transactions**.
+
+An **ERD / Database Schema Diagram** was also created to visualize the relationships between the tables.
+
+---
+
+## 🗂️ Database Schema
 
 The database consists of the following main tables:
 
-Table| Description
-"Departments"| Stores departments and their lead teachers
-"Teachers"| Stores teachers, departments, and supervisor relationships
-"Students"| Stores students and their departments
-"Courses"| Stores courses, course codes, teachers, and departments
-"Enrollment"| Connects students with courses and stores grades and enrollment dates
+### 1. Departments
 
-🔗 Main Relationships
+Stores information about school departments.
 
-Departments
-    │
-    ├── Students
-    │
-    ├── Courses
-    │
-    └── Teachers
-          │
-          └── Supervisor → Teacher
-
-Students
-    │
-    └── Enrollment ─── Courses
-
-The "Enrollment" table represents the many-to-many relationship between students and courses.
+| Column          | Description                            |
+| --------------- | -------------------------------------- |
+| `dept_ID`       | Primary Key, Identity                  |
+| `dept_Name`     | Unique department name                 |
+| `leadTeacherID` | Teacher responsible for the department |
 
 ---
 
-🛡️ Data Integrity & Constraints
+### 2. Teachers
 
-The project uses SQL Server constraints to maintain data integrity.
+Stores teacher information and their department/supervisor relationships.
 
-Primary Keys
+| Column         | Description           |
+| -------------- | --------------------- |
+| `tech_ID`      | Primary Key, Identity |
+| `tech_Name`    | Teacher name          |
+| `dept_ID`      | Teacher's department  |
+| `supervise_ID` | Optional supervisor   |
 
-Each main entity has its own primary key:
+The table also contains a **self-referencing foreign key** to represent the supervisor relationship.
 
-- "Departments.dept_ID"
-- "Teachers.tech_ID"
-- "Students.stud_ID"
-- "Courses.course_ID"
+A teacher cannot supervise themselves.
 
-"Enrollment" uses a composite primary key:
+---
 
-PRIMARY KEY (Student_ID, Course_ID)
+### 3. Students
+
+Stores student information.
+
+| Column      | Description           |
+| ----------- | --------------------- |
+| `stud_ID`   | Primary Key, Identity |
+| `stud_Name` | Student name          |
+| `dept_ID`   | Student's department  |
+
+Each student belongs to one department.
+
+---
+
+### 4. Courses
+
+Stores courses offered by departments.
+
+| Column          | Description                        |
+| --------------- | ---------------------------------- |
+| `course_ID`     | Primary Key, Identity              |
+| `course_Name`   | Course name                        |
+| `course_Code`   | Course code                        |
+| `teacher_ID`    | Teacher responsible for the course |
+| `department_ID` | Department offering the course     |
+
+---
+
+### 5. Enrollment
+
+Represents the many-to-many relationship between students and courses.
+
+| Column            | Description       |
+| ----------------- | ----------------- |
+| `Student_ID`      | Student reference |
+| `Course_ID`       | Course reference  |
+| `Grade`           | Student grade     |
+| `Enrollment_Date` | Enrollment date   |
+
+The table uses a composite primary key:
+
+```sql
+PRIMARY KEY(Student_ID, Course_ID)
+```
 
 This prevents the same student from being enrolled in the same course more than once.
 
-Foreign Keys
+---
 
-Foreign keys are used to enforce relationships between entities, including:
+## 🔐 Constraints & Data Integrity
 
-- Teacher → Department
-- Teacher → Supervisor
-- Student → Department
-- Course → Teacher
-- Course → Department
-- Enrollment → Student
-- Enrollment → Course
+The database uses several SQL Server constraints to maintain data integrity.
 
-Check Constraints
+### Primary Keys
 
-Examples include:
+Every main entity has a primary key.
 
+```text
+Departments → dept_ID
+Teachers → tech_ID
+Students → stud_ID
+Courses → course_ID
+```
+
+`Enrollment` uses a composite primary key:
+
+```text
+(Student_ID, Course_ID)
+```
+
+### Foreign Keys
+
+Foreign keys enforce relationships between tables.
+
+Examples:
+
+* Teacher → Department
+* Student → Department
+* Course → Teacher
+* Course → Department
+* Enrollment → Student
+* Enrollment → Course
+* Teacher → Supervisor
+* Department → Lead Teacher
+
+### Unique Constraint
+
+Department names must be unique.
+
+```sql
+dept_Name VARCHAR(50) UNIQUE NOT NULL
+```
+
+A composite unique constraint was also added to support the relationship between a department and its lead teacher.
+
+### Check Constraints
+
+The database validates grades:
+
+```sql
 CHECK (Grade >= 0 AND Grade <= 100)
+```
 
-and:
+It also prevents a teacher from supervising themselves:
 
+```sql
 CHECK (supervise_ID <> tech_ID)
+```
 
-to prevent invalid supervisor relationships.
+Enrollment dates cannot be in the future.
 
 ---
 
-🔍 SQL Queries
+# 🔎 Queries
 
-The project includes queries demonstrating different SQL concepts.
+The project includes several SQL queries demonstrating different database concepts.
 
-INNER JOIN
+## INNER JOIN
 
-Retrieve students together with their departments:
+Retrieve every student together with their department name.
 
+```sql
 SELECT stud_ID, stud_Name, dept_Name
 FROM Students
 INNER JOIN Departments
     ON Students.dept_ID = Departments.dept_ID;
+```
 
-GROUP BY & HAVING
+---
 
-Find teachers who teach more than three courses:
+## GROUP BY & HAVING
 
+Find teachers who teach more than three courses.
+
+```sql
 SELECT tech_Name, COUNT(course_Name) AS course_count
 FROM Teachers
 INNER JOIN Courses
     ON tech_ID = teacher_ID
 GROUP BY tech_Name
 HAVING COUNT(course_Name) > 3;
+```
 
-EXISTS
+---
 
-Find students who have not received a grade in any enrolled course:
+## EXISTS
 
+Find students who have not received a grade in any enrolled course.
+
+```sql
 SELECT DISTINCT stud_Name
 FROM Students
 INNER JOIN Enrollment
@@ -140,288 +216,376 @@ WHERE NOT EXISTS
     WHERE Enrollment.Student_ID = Students.stud_ID
       AND Grade IS NOT NULL
 );
-
-Self JOIN
-
-Identify departments whose lead teacher supervises more than five teachers.
-
-Aggregation
-
-Retrieve departments offering more than five courses using:
-
-- "JOIN"
-- "GROUP BY"
-- "HAVING"
+```
 
 ---
 
-👁️ Views
+## SELF JOIN
 
-The project includes reusable database views for reporting and data retrieval.
+Find departments whose lead teacher supervises more than five teachers.
 
-"vw_DepartmentSummary"
-
-Provides:
-
-- Department ID
-- Department name
-- Number of students
-- Number of teachers
-
-"vw_TeacherCourseLoad"
-
-Shows each teacher and the number of courses they teach.
-
-"vw_StudentFullReport"
-
-Combines:
-
-- Student information
-- Enrolled courses
-- Grades
-- Computed academic status
-
-Example statuses:
-
-Pending
-Passed
-Failed
-
-"vw_DepartmentTopStudent"
-
-Uses a window function to identify the top student in each department based on average grade.
+The query uses a self join on the `Teachers` table because a teacher can supervise another teacher from the same table.
 
 ---
 
-⚙️ User-Defined Functions
+## Window Functions
 
-The project includes both Scalar-Valued Functions and Table-Valued Functions.
+The project uses `ROW_NUMBER()` to identify the top student in each department based on average grade.
 
-"fn_CalculateAge"
-
-Calculates a person's age based on their date of birth.
-
-SELECT dbo.fn_CalculateAge('2000-05-10');
-
-"fn_IsPassed"
-
-Determines the status of a grade:
-
-Passed
-Failed
-Pending
-
-"fn_GetCoursesByStudent"
-
-A table-valued function used to retrieve courses associated with a specific student.
-
-SELECT *
-FROM fn_GetCoursesByStudent(1);
-
-"fn_GetStudentsByCourse"
-
-Returns the top students in a specific course using "ROW_NUMBER()".
-
-SELECT *
-FROM fn_GetStudentsByCourse(3, 2);
-
----
-
-🧩 Stored Procedures
-
-The project contains stored procedures for common academic operations.
-
-"sp_GetStudentsByDepartment"
-
-Retrieves students belonging to a specific department and handles invalid department IDs.
-
-EXEC sp_GetStudentsByDepartment 1;
-
-"sp_EnrollStudent"
-
-Handles student enrollment while validating:
-
-- Student existence
-- Course existence
-- Department compatibility
-- Duplicate enrollment
-
-Example:
-
-EXEC sp_EnrollStudent 1, 5;
-
-"sp_TransferStudent"
-
-Transfers a student to another department while checking:
-
-- Student existence
-- Target department existence
-- Existing enrollment conflicts
-- Transaction success/failure
-
-The procedure uses a transaction to maintain data consistency.
-
----
-
-📊 Window Functions
-
-Window functions were used for ranking and analytical queries.
-
-Example:
-
-ROW_NUMBER() OVER
-(
-    ORDER BY Grade DESC
-)
-
-and:
-
+```sql
 ROW_NUMBER() OVER
 (
     PARTITION BY dept_Name
     ORDER BY average DESC
 )
+```
 
-These were used to retrieve top-performing students while keeping the query within a relational SQL approach.
+This allows the students to be ranked independently inside each department.
 
 ---
 
-🚀 Indexing & Query Performance
+# 👁️ Views
 
-The project also includes practical experimentation with query performance and indexing.
+Several views were created to simplify frequently used queries.
 
-Existing Clustered Primary Key
+## `vw_DepartmentSummary`
 
-The "Enrollment" table has a composite primary key:
+Displays each department with:
 
-PRIMARY KEY (Student_ID, Course_ID)
+* Department ID
+* Department name
+* Number of students
+* Number of teachers
 
-Since "Student_ID" is the leading column, queries filtering by "Student_ID" can already benefit from the clustered index.
+`COUNT(DISTINCT ...)` is used to avoid duplicated counts caused by joining multiple tables.
 
-A separate index was also tested:
+---
 
+## `vw_TeacherCourseLoad`
+
+Displays each teacher and the number of courses they teach.
+
+```text
+Teacher
+CourseCount
+```
+
+A `LEFT JOIN` is used so that teachers with no courses can also appear in the result.
+
+---
+
+## `vw_StudentFullReport`
+
+Combines:
+
+* Student information
+* Enrolled courses
+* Grades
+* Calculated enrollment status
+
+The status is calculated using `CASE`:
+
+```text
+NULL grade → Pending
+Grade >= 50 → Passed
+Grade < 50 → Failed
+```
+
+---
+
+## `vw_DepartmentTopStudent`
+
+Identifies the top student in each department based on average grade.
+
+The view uses:
+
+```sql
+ROW_NUMBER()
+OVER
+(
+    PARTITION BY dept_Name
+    ORDER BY average DESC
+)
+```
+
+Then only the first-ranked student from each department is returned.
+
+---
+
+# ⚙️ User-Defined Functions
+
+The project contains both **Scalar-Valued Functions** and **Table-Valued Functions**.
+
+## `fn_CalculateAge`
+
+Calculates age based on the provided date of birth.
+
+```sql
+SELECT dbo.fn_CalculateAge('2006-09-09');
+```
+
+---
+
+## `fn_GetCoursesByStudent`
+
+A table-valued function that returns the courses and related information for a specific student.
+
+Example:
+
+```sql
+SELECT *
+FROM fn_GetCoursesByStudent(1);
+```
+
+---
+
+## `fn_GetStudentsByCourse`
+
+Returns the top N students in a specific course based on their grades.
+
+It uses `ROW_NUMBER()` to rank students.
+
+Example:
+
+```sql
+SELECT *
+FROM fn_GetStudentsByCourse(3, 2);
+```
+
+---
+
+## `fn_IsPassed`
+
+Determines the student's status based on the grade.
+
+Possible results:
+
+```text
+Pending
+Passed
+Failed
+```
+
+Example:
+
+```sql
+SELECT dbo.fn_IsPassed(80);
+```
+
+---
+
+# 🛠️ Stored Procedures
+
+The project includes stored procedures for common database operations.
+
+## `sp_GetStudentsByDepartment`
+
+Returns students belonging to a specific department.
+
+The procedure also checks whether the department exists before executing the query.
+
+Example:
+
+```sql
+EXEC sp_GetStudentsByDepartment 1;
+```
+
+---
+
+## `sp_EnrollStudent`
+
+Enrolls a student in a course after validating:
+
+1. Student exists.
+2. Course exists.
+3. Student and course belong to the same department.
+4. Student is not already enrolled in the course.
+
+The procedure prevents invalid enrollments and duplicate enrollment records.
+
+---
+
+## `sp_TransferStudent`
+
+Transfers a student to another department.
+
+Before performing the transfer, the procedure checks:
+
+* Student exists.
+* New department exists.
+* The student has no enrollment conflict with courses from another department.
+
+The update is performed inside a **Transaction**.
+
+```text
+BEGIN TRANSACTION
+        ↓
+Validate transfer
+        ↓
+Update student department
+        ↓
+COMMIT
+```
+
+If a problem occurs, the transaction is rolled back.
+
+---
+
+# 📊 Indexing
+
+The project also explores SQL Server indexing and query performance.
+
+## Index on `Enrollment.Student_ID`
+
+An index was created on:
+
+```sql
 CREATE INDEX IX_Enrollment_StudentId
 ON Enrollment(Student_ID);
+```
 
-The execution behavior was then investigated using SQL Server performance statistics.
+The project compares this with the existing clustered primary key:
 
-Composite Index
+```text
+(Student_ID, Course_ID)
+```
 
-A composite index was also created for queries filtering by both student and course:
+Because `Student_ID` is already the leading column of the clustered primary key, queries filtering only by `Student_ID` can already benefit from that key.
 
+Therefore, an additional single-column index on `Student_ID` may be redundant depending on the query workload.
+
+---
+
+## Composite Index
+
+A composite index was also created:
+
+```sql
 CREATE INDEX IX_Enrollment_StudentID_CourseID
 ON Enrollment(Student_ID, Course_ID);
+```
 
-Performance was analyzed using:
+This index is useful for queries that filter using both:
 
+```text
+Student_ID
+Course_ID
+```
+
+For example, checking whether a student is already enrolled in a specific course.
+
+---
+
+# 📈 Query Performance
+
+SQL Server performance statistics were examined using:
+
+```sql
 SET STATISTICS TIME, IO ON;
+```
 
-This helped compare query behavior and understand how indexes can affect database access patterns.
+This allows comparison of:
 
----
+* CPU time
+* Elapsed time
+* Logical reads
+* Physical reads
+* Scan count
 
-🧪 Sample Data
-
-The database includes sample data for:
-
-- Computer Science
-- Mathematics
-- Physics
-
-along with:
-
-- Teachers and supervisor relationships
-- Students
-- Courses
-- Course enrollments
-- Grades
-- Enrollment dates
-
-This sample data was designed to test different queries, views, functions, and stored procedures.
+Execution plans can also be used to understand how SQL Server accesses the data.
 
 ---
 
-🛠️ Technologies & Concepts
+# 🧩 SQL Concepts Covered
 
-Database
+This project demonstrates the following SQL Server concepts:
 
-- Microsoft SQL Server
-- T-SQL
-
-SQL Concepts
-
-- Relational Database Design
-- Primary & Foreign Keys
-- Composite Keys
-- Unique Constraints
-- Check Constraints
-- Cascading Deletes
-- Self Relationships
-- INNER JOIN
-- SELF JOIN
-- GROUP BY
-- HAVING
-- EXISTS
-- Aggregate Functions
-- Window Functions
-- Views
-- Scalar Functions
-- Table-Valued Functions
-- Stored Procedures
-- Transactions
-- Indexes
-- Query Performance Analysis
-- Execution Plans
-- "STATISTICS IO"
-- "STATISTICS TIME"
-
----
-
-🎯 Learning Outcomes
-
-Through this project, I practiced moving beyond basic SQL queries toward building and working with a more complete relational database system.
-
-Key areas I strengthened:
-
-- Designing related database tables
-- Enforcing data integrity
-- Writing complex SQL queries
-- Creating reusable views and functions
-- Building stored procedures with validation
-- Handling transactions and business rules
-- Using window functions for analytical queries
-- Understanding indexes and their impact on query performance
-- Reading and analyzing query execution behavior
+* Database Design
+* ERD / Schema Design
+* Primary Keys
+* Foreign Keys
+* Composite Primary Keys
+* Composite Unique Constraints
+* Check Constraints
+* Self-Referencing Foreign Keys
+* `INNER JOIN`
+* `LEFT JOIN`
+* `SELF JOIN`
+* `GROUP BY`
+* `HAVING`
+* `EXISTS`
+* Subqueries
+* Aggregate Functions
+* `CASE`
+* Views
+* Scalar-Valued Functions
+* Table-Valued Functions
+* Window Functions
+* `ROW_NUMBER()`
+* Stored Procedures
+* Transactions
+* `TRY...CATCH`
+* Indexes
+* Composite Indexes
+* Query Performance Analysis
+* `STATISTICS IO`
+* `STATISTICS TIME`
 
 ---
 
-📁 Project Structure
+# 📁 Project Structure
 
-A possible repository structure:
+A suggested project structure:
 
-Academic-Management-Database/
+```text
+SchoolDatabase/
 │
-├── Database/
-│   ├── 01_CreateTables.sql
-│   ├── 02_Constraints.sql
-│   ├── 03_InsertData.sql
-│   ├── 04_Queries.sql
-│   ├── 05_Views.sql
-│   ├── 06_Functions.sql
-│   ├── 07_StoredProcedures.sql
-│   └── 08_Indexing_Performance.sql
+├── README.md
 │
-└── README.md
+├── ERD/
+│   └── schema.png
+│
+└── SQL/
+    ├── 01_Schema.sql
+    ├── 02_Data.sql
+    ├── 03_Queries.sql
+    ├── 04_Views.sql
+    ├── 05_Functions.sql
+    ├── 06_StoredProcedures.sql
+    └── 07_Indexes.sql
+```
+
+The `ERD/schema.png` file contains the database schema and relationships between the main entities.
 
 ---
 
-👩‍💻 Author
+# 🎯 Project Goals
 
-Rowida Hany
+The main goals of this project are to practice designing and implementing a relational database using SQL Server and to apply SQL concepts in a realistic school management scenario.
 
-Computer & Information Science Student
-Aspiring Full Stack .NET Developer
+The project focuses on both **database structure** and **querying/manipulating data**, including validation, reporting, reusable database objects, transactions, and performance considerations.
 
-Focused on building strong foundations in:
+---
 
-"C#" • ".NET" • "SQL Server" • "Database Design"
+## 🧰 Technologies
+
+* **Microsoft SQL Server**
+* **T-SQL**
+* **SQL Server Management Studio (SSMS)**
+
+---
+
+## 👩‍💻 Author
+
+**Rowida Hany**
+
+Computer Science Student
+Ain Shams University
+
+GitHub: `rowida084`
+
+---
+
+## 📌 Notes
+
+This project was developed as a practical SQL Server database exercise covering database design, querying, programmable database objects, transactions, and indexing.
